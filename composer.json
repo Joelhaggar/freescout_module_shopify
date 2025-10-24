@@ -1,0 +1,25 @@
+{
+    "name": "freescout/shopify",
+    "description": "Shopify Integration for FreeScout",
+    "authors": [
+        {
+            "name": "FreeScout",
+            "email": "support@freescout.net"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Modules\\Shopify\\Providers\\ShopifyServiceProvider"
+            ],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Shopify\\": ""
+        }
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "Admin API Access Token": "Admin API-Zugriffstoken",
+    "API Version": "API Version",
+    "Authentication error. Check your Admin API access token and ensure it has the correct permissions.": "Authentifizierungsfehler. Überprüfen Sie Ihr Admin-API-Zugriffstoken und stellen Sie sicher, dass es die richtigen Berechtigungen hat.",
+    "Bad request": "Ungültige Anfrage",
+    "Error occurred connecting to the API": "Fehler beim Verbinden mit der API",
+    "Example": "Beispiel",
+    "Internal shop error": "Interner Shop-Fehler",
+    "No orders found": "Keine Bestellungen gefunden",
+    "Recent Orders": "Aktuelle Bestellungen",
+    "Refresh": "Neu laden",
+    "Shop Domain": "Shop-Domain",
+    "Shop not found. Verify your shop domain is correct (e.g., mystore.myshopify.com)": "Shop nicht gefunden. Überprüfen Sie, ob Ihre Shop-Domain korrekt ist (z.B. mystore.myshopify.com)",
+    "Shopify API rate limit exceeded. Please try again in a moment.": "Shopify API-Ratenlimit überschritten. Bitte versuchen Sie es in einem Moment erneut.",
+    "Successfully connected to the API.": "Erfolgreich mit der API verbunden.",
+    "Unknown error": "Unbekannter Fehler",
+    "Shopify": "Shopify"
+}

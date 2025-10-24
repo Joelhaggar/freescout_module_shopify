@@ -1,0 +1,21 @@
+#shopify-loader {
+	display: none;
+	margin-top: 10px;
+	margin-bottom: 5px;
+	text-align: center;
+}
+.shopify-loading #shopify-loader {
+	display: block;
+} 
+.shopify-loading .shopify-refresh,
+.shopify-loading .shopify-orders-list,
+.shopify-loading .shopify-no-orders {
+	display: none;
+}
+
+.shopify-orders-list li {
+	margin-top: 3px;
+	margin-bottom: 3px;
+	padding-bottom: 3px;
+	border-bottom: 1px solid #E3E8EB;
+}

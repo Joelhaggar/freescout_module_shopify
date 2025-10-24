@@ -1,0 +1,24 @@
+{
+    "name": "Shopify Integration",
+    "alias": "shopify",
+    "description": "View customer Shopify order history in the Customer Profile pane!",
+    "version": "1.0.0",
+    "detailsUrl": "",
+    "author": "Custom",
+    "authorUrl": "",
+    "requiredAppVersion": "1.8.190",
+    "license": "AGPL-3.0",
+    "keywords": ["shopify", "ecommerce", "orders"],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Shopify\\Providers\\ShopifyServiceProvider"
+    ],
+    "aliases": {
+        "Shopify": "Modules\\Shopify\\Providers\\ShopifyServiceProvider"
+    },
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}
