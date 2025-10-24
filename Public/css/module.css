@@ -19,3 +19,318 @@
 	padding-bottom: 3px;
 	border-bottom: 1px solid #E3E8EB;
 }
+
+.shopify-order-item:hover {
+	background-color: #f5f5f5;
+	border-radius: 3px;
+}
+
+/* Slide-out panel styles */
+.shopify-order-panel {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 10000;
+	pointer-events: none;
+	visibility: hidden;
+}
+
+.shopify-order-panel.active {
+	pointer-events: auto;
+	visibility: visible;
+}
+
+/* Semi-transparent overlay */
+.shopify-panel-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.5);
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+.shopify-order-panel.active .shopify-panel-overlay {
+	opacity: 1;
+}
+
+/* The actual panel that slides in from right */
+.shopify-panel-content {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 450px;
+	max-width: 90vw;
+	background: #ffffff;
+	box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+	transform: translateX(100%);
+	transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.shopify-order-panel.active .shopify-panel-content {
+	transform: translateX(0);
+}
+
+/* Panel header */
+.shopify-panel-header {
+	padding: 20px;
+	border-bottom: 1px solid #e1e3e5;
+	background: #ffffff;
+	position: relative;
+	flex-shrink: 0;
+}
+
+.shopify-panel-close {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	background: none;
+	border: none;
+	font-size: 32px;
+	line-height: 1;
+	cursor: pointer;
+	color: #999;
+	padding: 0;
+	width: 30px;
+	height: 30px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.shopify-panel-close:hover {
+	color: #333;
+}
+
+.shopify-panel-logo {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 18px;
+	font-weight: 600;
+	color: #202223;
+}
+
+.shopify-panel-logo svg {
+	flex-shrink: 0;
+}
+
+/* Scrollable content area */
+.shopify-panel-body {
+	flex: 1;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding: 20px;
+	background: #f6f6f7;
+}
+
+/* Order details sections */
+.shopify-detail-section {
+	background: #ffffff;
+	border: 1px solid #e1e3e5;
+	border-radius: 8px;
+	padding: 16px;
+	margin-bottom: 16px;
+}
+
+.shopify-detail-section-title {
+	font-size: 14px;
+	font-weight: 600;
+	color: #202223;
+	margin-bottom: 12px;
+}
+
+.shopify-detail-row {
+	display: flex;
+	justify-content: space-between;
+	padding: 8px 0;
+	font-size: 13px;
+}
+
+.shopify-detail-row:not(:last-child) {
+	border-bottom: 1px solid #f1f2f3;
+}
+
+.shopify-detail-label {
+	color: #6d7175;
+}
+
+.shopify-detail-value {
+	color: #202223;
+	font-weight: 500;
+	text-align: right;
+}
+
+/* Status badges */
+.shopify-status-badge {
+	display: inline-block;
+	padding: 4px 8px;
+	border-radius: 4px;
+	font-size: 12px;
+	font-weight: 500;
+	text-transform: capitalize;
+}
+
+.shopify-status-paid {
+	background: #d1f7c4;
+	color: #108043;
+}
+
+.shopify-status-pending {
+	background: #ffd79d;
+	color: #6f4400;
+}
+
+.shopify-status-fulfilled {
+	background: #d1f7c4;
+	color: #108043;
+}
+
+.shopify-status-partial {
+	background: #ffd79d;
+	color: #6f4400;
+}
+
+.shopify-status-unfulfilled {
+	background: #e4e5e7;
+	color: #6d7175;
+}
+
+/* Line items */
+.shopify-line-item {
+	display: flex;
+	gap: 12px;
+	padding: 12px 0;
+	border-bottom: 1px solid #f1f2f3;
+}
+
+.shopify-line-item:last-child {
+	border-bottom: none;
+}
+
+.shopify-line-item-image {
+	width: 60px;
+	height: 60px;
+	background: #f6f6f7;
+	border: 1px solid #e1e3e5;
+	border-radius: 8px;
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 24px;
+	color: #95bf47;
+}
+
+.shopify-line-item-details {
+	flex: 1;
+	min-width: 0;
+}
+
+.shopify-line-item-name {
+	font-size: 13px;
+	font-weight: 500;
+	color: #202223;
+	margin-bottom: 4px;
+}
+
+.shopify-line-item-variant {
+	font-size: 12px;
+	color: #6d7175;
+	margin-bottom: 4px;
+}
+
+.shopify-line-item-sku {
+	font-size: 11px;
+	color: #8c9196;
+}
+
+.shopify-line-item-price {
+	text-align: right;
+	flex-shrink: 0;
+}
+
+.shopify-line-item-amount {
+	font-size: 13px;
+	font-weight: 500;
+	color: #202223;
+}
+
+.shopify-line-item-quantity {
+	font-size: 12px;
+	color: #6d7175;
+}
+
+/* Links */
+.shopify-panel-link {
+	color: #2c6ecb;
+	text-decoration: none;
+	font-size: 13px;
+}
+
+.shopify-panel-link:hover {
+	text-decoration: underline;
+}
+
+/* Address block */
+.shopify-address-block {
+	font-size: 13px;
+	line-height: 1.6;
+	color: #202223;
+}
+
+/* Tracking info */
+.shopify-tracking {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 8px;
+}
+
+.shopify-tracking-number {
+	font-family: 'Monaco', 'Menlo', monospace;
+	font-size: 12px;
+	color: #2c6ecb;
+	text-decoration: none;
+}
+
+.shopify-tracking-number:hover {
+	text-decoration: underline;
+}
+
+/* Receipt totals */
+.shopify-receipt-totals {
+	margin-top: 16px;
+}
+
+.shopify-receipt-row {
+	display: flex;
+	justify-content: space-between;
+	padding: 8px 0;
+	font-size: 13px;
+}
+
+.shopify-receipt-row.total {
+	border-top: 2px solid #e1e3e5;
+	margin-top: 8px;
+	padding-top: 12px;
+	font-weight: 600;
+	font-size: 14px;
+}
+
+.shopify-receipt-label {
+	color: #6d7175;
+}
+
+.shopify-receipt-value {
+	color: #202223;
+	font-weight: 500;
+}
