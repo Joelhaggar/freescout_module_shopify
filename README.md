@@ -339,12 +339,18 @@ https://github.com/Joelhaggar/freescout_module_shopify
 ### Order List in Sidebar
 Orders appear automatically when viewing a conversation with a Shopify customer.
 
+![Order List in Sidebar](docs/Screenshot1.png)
+
 ### Order Details Panel
 Click any order to view comprehensive details in a beautiful slide-out panel with:
 - Order status and fulfillment badges
 - Shipping address and tracking
 - Product line items
 - Complete receipt breakdown
+
+![Order Details Panel - Part 1](docs/Screenshot2.png)
+
+![Order Details Panel - Part 2](docs/Screenshot3.png)
 
 ---
 
