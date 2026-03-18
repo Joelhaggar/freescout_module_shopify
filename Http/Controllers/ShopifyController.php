@@ -22,8 +22,9 @@ class ShopifyController extends Controller
         return view('shopify::mailbox_settings', [
             'settings' => [
                 'shopify.shop_domain' => $settings['shop_domain'] ?? '',
-                'shopify.access_token' => $settings['access_token'] ?? '',
-                'shopify.api_version' => $settings['api_version'] ?? '',
+                'shopify.client_id'     => $settings['client_id']     ?? '',
+                'shopify.client_secret' => $settings['client_secret'] ?? '',
+                'shopify.api_version'   => $settings['api_version']   ?? '',
             ],
             'mailbox' => $mailbox
         ]);
@@ -52,7 +53,7 @@ class ShopifyController extends Controller
         $mailbox->shopify = json_encode($settings);
         $mailbox->save();
 
-        if (!empty($settings['shop_domain']) && !empty($settings['access_token']) && !empty($settings['api_version'])) {
+        if (!empty($settings['shop_domain']) && !empty($settings['client_id']) && !empty($settings['client_secret']) && !empty($settings['api_version'])) {
             // Check API credentials - create dummy customer object for testing
             $test_customer = new \stdClass();
             $test_customer->shopify_customer_id = null;

@@ -81,8 +81,11 @@ class ShopifyServiceProvider extends ServiceProvider
                 'shopify.shop_domain' => [
                     'env' => 'SHOPIFY_SHOP_DOMAIN',
                 ],
-                'shopify.access_token' => [
-                    'env' => 'SHOPIFY_ACCESS_TOKEN',
+                'shopify.client_id' => [
+                    'env' => 'SHOPIFY_CLIENT_ID',
+                ],
+                'shopify.client_secret' => [
+                    'env' => 'SHOPIFY_CLIENT_SECRET',
                 ],
                 'shopify.api_version' => [
                     'env' => 'SHOPIFY_API_VERSION',
@@ -113,9 +116,10 @@ class ShopifyServiceProvider extends ServiceProvider
                 return $settings;
             }
 
-            $settings['shopify.shop_domain'] = config('shopify.shop_domain');
-            $settings['shopify.access_token'] = config('shopify.access_token');
-            $settings['shopify.api_version'] = config('shopify.api_version');
+            $settings['shopify.shop_domain']   = config('shopify.shop_domain');
+            $settings['shopify.client_id']     = config('shopify.client_id');
+            $settings['shopify.client_secret'] = config('shopify.client_secret');
+            $settings['shopify.api_version']   = config('shopify.api_version');
 
             $mailboxes_enabled = \Auth::user()->mailboxesCanView(true);
             foreach ($mailboxes_enabled as $i => $mailbox) {
@@ -262,7 +266,7 @@ class ShopifyServiceProvider extends ServiceProvider
 
     public static function isApiEnabled()
     {
-        return (config('shopify.shop_domain') && config('shopify.access_token') && config('shopify.api_version'));
+        return (config('shopify.shop_domain') && config('shopify.client_id') && config('shopify.client_secret') && config('shopify.api_version'));
     }
 
     public static function isMailboxApiEnabled($mailbox)
@@ -272,7 +276,7 @@ class ShopifyServiceProvider extends ServiceProvider
         }
         $settings = self::getMailboxShopifySettings($mailbox);
 
-        return (!empty($settings['shop_domain']) && !empty($settings['access_token']) && !empty($settings['api_version']));
+        return (!empty($settings['shop_domain']) && !empty($settings['client_id']) && !empty($settings['client_secret']) && !empty($settings['api_version']));
     }
 
     public static function getMailboxShopifySettings($mailbox)
@@ -310,6 +314,44 @@ class ShopifyServiceProvider extends ServiceProvider
      * Retrieve Shopify orders for customer.
      * Uses customer ID caching to optimize API calls.
      */
+    public static function getAccessToken($shop_domain, $client_id, $client_secret)
+    {
+        $cacheKey = 'shopify_access_token_' . md5($shop_domain . $client_id);
+        if (\Cache::has($cacheKey)) {
+            return \Cache::get($cacheKey);
+        }
+        try {
+            $ch = curl_init('https://' . $shop_domain . '/admin/oauth/access_token');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded']);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+                'grant_type'    => 'client_credentials',
+                'client_id'     => $client_id,
+                'client_secret' => $client_secret,
+            ]));
+            curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            if ($httpCode !== 200 || !$response) {
+                \Log::error('[Shopify] Token request failed', ['http_code' => $httpCode, 'response' => $response]);
+                return null;
+            }
+            $data = json_decode($response, true);
+            if (empty($data['access_token'])) {
+                \Log::error('[Shopify] No access_token in response', ['response' => $data]);
+                return null;
+            }
+            \Cache::put($cacheKey, $data['access_token'], now()->addHours(23));
+            \Log::info('[Shopify] Nouveau token obtenu et mis en cache 23h');
+            return $data['access_token'];
+        } catch (\Exception $e) {
+            \Log::error('[Shopify] Exception token', ['error' => $e->getMessage()]);
+            return null;
+        }
+    }
+
     public static function apiGetOrders($customer_email, $customer, $mailbox = null)
     {
         $response = [
@@ -320,27 +362,29 @@ class ShopifyServiceProvider extends ServiceProvider
         // Get credentials (global or per-mailbox)
         if ($mailbox && \Shopify::isMailboxApiEnabled($mailbox)) {
             $settings = self::getMailboxShopifySettings($mailbox);
-            $shop_domain = $settings['shop_domain'];
-            $access_token = $settings['access_token'];
-            $api_version = $settings['api_version'];
-            \Log::info('[Shopify] Using mailbox settings - Domain: ' . $shop_domain . ', Version: ' . $api_version . ', Token: ' . substr($access_token, 0, 10) . '...');
+            $shop_domain   = $settings['shop_domain'];
+            $client_id     = $settings['client_id'];
+            $client_secret = $settings['client_secret'];
+            $api_version   = $settings['api_version'];
         } else {
-            $shop_domain = config('shopify.shop_domain');
-            $access_token = config('shopify.access_token');
-            $api_version = config('shopify.api_version');
-            \Log::info('[Shopify] Using global settings - Domain: ' . $shop_domain . ', Version: ' . $api_version . ', Token: ' . substr($access_token, 0, 10) . '...');
+            $shop_domain   = config('shopify.shop_domain');
+            $client_id     = config('shopify.client_id');
+            $client_secret = config('shopify.client_secret');
+            $api_version   = config('shopify.api_version');
+        }
+
+        \Log::info('[Shopify] apiGetOrders - Domain: ' . $shop_domain . ', Version: ' . $api_version);
+
+        $access_token = self::getAccessToken($shop_domain, $client_id, $client_secret);
+        if (!$access_token) {
+            return ['error' => 'Impossible d\'obtenir un token Shopify. Vérifiez Client ID et Client Secret.', 'data' => []];
         }
 
         $shop_url = self::getSanitizedShopDomain($shop_domain);
-        \Log::info('[Shopify] Shop URL: ' . $shop_url . ', Customer: ' . $customer_email);
-
-        // OPTIMIZATION: Check if we already have Shopify customer ID cached
         $shopify_customer_id = $customer->shopify_customer_id ?? null;
 
         if (!$shopify_customer_id) {
-            // Step 1: Lookup customer by email
             $customer_search_url = $shop_url . '/admin/api/' . $api_version . '/customers/search.json?query=email:' . urlencode($customer_email);
-
             $customer_result = self::makeShopifyApiCall($customer_search_url, $access_token);
 
             if (!empty($customer_result['error'])) {

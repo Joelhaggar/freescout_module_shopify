@@ -14,15 +14,12 @@
 
     <div class="form-group{{ $errors->has('settings.shopify->shop_domain') ? ' has-error' : '' }}">
         <label class="col-sm-2 control-label">{{ __('Shop Domain') }}</label>
-
         <div class="col-sm-6">
             <div class="input-group input-sized-lg">
                 <span class="input-group-addon input-group-addon-grey">https://</span>
                 <input type="text" class="form-control input-sized-lg" name="settings[shopify.shop_domain]" value="{{ old('settings') ? old('settings')['shopify.shop_domain'] : $settings['shopify.shop_domain'] }}" placeholder="mystore.myshopify.com">
             </div>
-
             @include('partials/field_error', ['field'=>'settings.shopify->shop_domain'])
-
             <p class="form-help">
                 {{ __('Example') }}: mystore.myshopify.com
             </p>
@@ -30,23 +27,29 @@
     </div>
 
     <div class="form-group">
-        <label class="col-sm-2 control-label">{{ __('Admin API Access Token') }}</label>
-
+        <label class="col-sm-2 control-label">{{ __('Client ID') }}</label>
         <div class="col-sm-6">
-            <input type="text" class="form-control input-sized-lg" name="settings[shopify.access_token]" value="{{ $settings['shopify.access_token'] }}" placeholder="shpat_...">
-
+            <input type="text" class="form-control input-sized-lg" name="settings[shopify.client_id]" value="{{ $settings['shopify.client_id'] ?? '' }}" placeholder="ex: 7a0f01aa3de1980fe8ed495d4c6e5feb">
             <p class="form-help">
-                {{ __('Generate an Admin API access token from your Shopify admin under "Settings » Apps and sales channels » Develop apps"') }} (<a href="https://shopify.dev/docs/apps/build/authentication-authorization/access-tokens/generate-app-access-tokens-admin" target="_blank">{{ __('Instructions') }}</a>)
+                {{ __('Votre Client ID depuis le Dev Dashboard Shopify → Paramètres → Identifiants') }}
+            </p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">{{ __('Client Secret') }}</label>
+        <div class="col-sm-6">
+            <input type="password" class="form-control input-sized-lg" name="settings[shopify.client_secret]" value="{{ $settings['shopify.client_secret'] ?? '' }}" placeholder="votre secret">
+            <p class="form-help">
+                {{ __('Votre Client Secret depuis le Dev Dashboard Shopify → Paramètres → Identifiants') }}
             </p>
         </div>
     </div>
 
     <div class="form-group">
         <label class="col-sm-2 control-label">{{ __('API Version') }}</label>
-
         <div class="col-sm-6">
-            <input type="text" class="form-control input-sized-lg" name="settings[shopify.api_version]" value="{{ $settings['shopify.api_version'] }}" placeholder="2025-01">
-
+            <input type="text" class="form-control input-sized-lg" name="settings[shopify.api_version]" value="{{ $settings['shopify.api_version'] ?? '2025-01' }}" placeholder="2025-01">
             <p class="form-help">
                 {!! __('Shopify API version (e.g., 2025-01). Find current versions :%a_begin%here:%a_end%.', ['%a_begin%' => '<a href="https://shopify.dev/docs/api/usage/versioning" target="_blank">', '%a_end%' => '</a>']) !!}
             </p>
